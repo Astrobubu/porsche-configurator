@@ -1,25 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { 
-  Search, Share2, ShoppingCart, RotateCcw, ChevronLeft, ChevronRight,
-  Sun
+import {
+  ChevronLeft, ChevronRight, ChevronDown, Check,
+  Sun, Car, Lightbulb, Disc3, Layers, Wind,
+  RectangleHorizontal, FlipHorizontal2, Phone,
+  LayoutGrid, Settings
 } from 'lucide-react'
 import './App.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
-// Configuration types
+// Types
 type CarColor = 'silver' | 'black' | 'red' | 'blue' | 'white'
 type BodyType = 'coupe' | 'convertible'
 type WheelType = 'wheel1' | 'wheel2' | 'wheel3'
 type DriveType = '2WD' | '4WD'
-type HeadlightType = 'led' | 'standard'
-type BrakeType = 'red' | 'yellow' | 'black' | 'silver'
-type TreadType = 'sport' | 'allseason' | 'offroad'
-type TrimType = 'carbon' | 'aluminum'
 
-// Car images
+// Data
 const carImages: Record<CarColor, Record<BodyType, string>> = {
   silver: { coupe: '/images/car-silver-coupe-wheel2.png', convertible: '/images/car-silver-convertible-wheel2.png' },
   black: { coupe: '/images/car-black-coupe-wheel2.png', convertible: '/images/car-black-convertible-wheel2.png' },
@@ -39,30 +33,6 @@ const transmissionImages: Record<DriveType, string> = {
   '4WD': '/images/transmission-4wd.png'
 }
 
-const treadImages: Record<TreadType, string> = {
-  sport: '/images/tread-sport.png',
-  allseason: '/images/tread-allseason.png',
-  offroad: '/images/tread-offroad.png'
-}
-
-const headlightImages: Record<HeadlightType, string> = {
-  led: '/images/headlight-led.png',
-  standard: '/images/headlight-standard.png'
-}
-
-const brakeImages: Record<BrakeType, string> = {
-  red: '/images/brake-red.png',
-  yellow: '/images/brake-yellow.png',
-  black: '/images/brake-black.png',
-  silver: '/images/brake-silver.png'
-}
-
-const trimImages: Record<TrimType, string> = {
-  carbon: '/images/trim-carbon.png',
-  aluminum: '/images/trim-aluminum.png'
-}
-
-// Options data
 const colorOptions: { id: CarColor; name: string; hex: string }[] = [
   { id: 'silver', name: 'GT Silver', hex: '#C0C0C0' },
   { id: 'black', name: 'Jet Black', hex: '#1a1a1a' },
@@ -72,123 +42,76 @@ const colorOptions: { id: CarColor; name: string; hex: string }[] = [
 ]
 
 const wheelOptions: { id: WheelType; name: string; price: number }[] = [
-  { id: 'wheel1', name: 'Carrera Classic', price: 1800 },
-  { id: 'wheel2', name: 'RS Spyder', price: 3403 },
-  { id: 'wheel3', name: 'SportDesign', price: 4200 }
+  { id: 'wheel1', name: 'Carrera Classic Rader', price: 1800 },
+  { id: 'wheel2', name: 'RS Spyder Rader', price: 3403 },
+  { id: 'wheel3', name: 'SportDesign Rader', price: 4200 }
 ]
 
-const treadOptions: { id: TreadType; name: string; price: number }[] = [
-  { id: 'sport', name: 'Sport Performance', price: 800 },
-  { id: 'allseason', name: 'All-Season', price: 0 },
-  { id: 'offroad', name: 'All-Terrain', price: 1200 }
-]
-
-const headlightOptions: { id: HeadlightType; name: string; price: number }[] = [
-  { id: 'standard', name: 'LED', price: 0 },
-  { id: 'led', name: 'Matrix LED', price: 2400 }
-]
-
-const brakeOptions: { id: BrakeType; name: string; price: number }[] = [
-  { id: 'silver', name: 'Silver', price: 0 },
-  { id: 'red', name: 'Racing Red', price: 900 },
-  { id: 'yellow', name: 'Sport Yellow', price: 900 },
-  { id: 'black', name: 'Stealth Black', price: 900 }
-]
-
-const trimOptions: { id: TrimType; name: string; price: number }[] = [
-  { id: 'aluminum', name: 'Brushed Alum.', price: 0 },
-  { id: 'carbon', name: 'Carbon Fiber', price: 3500 }
-]
-
-// Carousel Component
-interface CarouselProps<T> {
-  items: T[]
-  selectedId: string
-  onSelect: (id: string) => void
-  renderItem: (item: T, isCenter: boolean) => React.ReactNode
-  getId: (item: T) => string
+// Porsche Crest SVG
+function PorscheCrest({ size = 36 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 2C50 2 95 15 95 15V70C95 70 50 98 50 98C50 98 5 70 5 70V15C5 15 50 2 50 2Z" fill="#C6A052" stroke="#8B6914" strokeWidth="2"/>
+      <path d="M50 8C50 8 88 19 88 19V66C88 66 50 91 50 91C50 91 12 66 12 66V19C12 19 50 8 50 8Z" fill="#1A1A1A"/>
+      <path d="M50 14C50 14 82 23 82 23V62C82 62 50 85 50 85C50 85 18 62 18 62V23C18 23 50 14 50 14Z" fill="#C6A052" stroke="#8B6914" strokeWidth="0.5"/>
+      {/* Quadrant lines */}
+      <line x1="50" y1="14" x2="50" y2="85" stroke="#1A1A1A" strokeWidth="2.5"/>
+      <line x1="18" y1="42" x2="82" y2="42" stroke="#1A1A1A" strokeWidth="2.5"/>
+      {/* Top-left antlers */}
+      <path d="M30 22L30 38M26 24L26 36M34 20L34 40" stroke="#CE2029" strokeWidth="2" strokeLinecap="round"/>
+      {/* Top-right antlers */}
+      <path d="M70 22L70 38M66 24L66 36M74 20L74 40" stroke="#CE2029" strokeWidth="2" strokeLinecap="round"/>
+      {/* Bottom-left Stuttgart horse hint */}
+      <path d="M28 52C32 48 38 50 40 55C42 60 36 68 30 65C24 62 24 56 28 52Z" stroke="#1A1A1A" strokeWidth="1.5" fill="none"/>
+      {/* Bottom-right Stuttgart horse hint */}
+      <path d="M72 52C68 48 62 50 60 55C58 60 64 68 70 65C76 62 76 56 72 52Z" stroke="#1A1A1A" strokeWidth="1.5" fill="none"/>
+      {/* Center horse silhouette simplified */}
+      <path d="M46 56L44 50L46 44L50 42L54 44L56 50L54 56L52 62L50 66L48 62L46 56Z" fill="#1A1A1A" opacity="0.3"/>
+    </svg>
+  )
 }
 
-function Carousel<T>({ items, selectedId, onSelect, renderItem, getId }: CarouselProps<T>) {
-  const selectedIndex = items.findIndex(item => getId(item) === selectedId)
-  
+// Side icon button
+function SideIcon({ icon, active, comingSoon, onClick, tooltip }: {
+  icon: React.ReactNode
+  active?: boolean
+  comingSoon?: boolean
+  onClick?: () => void
+  tooltip?: string
+}) {
   return (
-    <div className="carousel-container">
-      <button 
-        className="carousel-nav carousel-prev"
-        onClick={() => {
-          const newIndex = selectedIndex > 0 ? selectedIndex - 1 : items.length - 1
-          onSelect(getId(items[newIndex]))
-        }}
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-      
-      <div className="carousel-track">
-        {items.map((item, index) => {
-          const isCenter = index === selectedIndex
-          const isLeft = index === (selectedIndex - 1 + items.length) % items.length
-          const isRight = index === (selectedIndex + 1) % items.length
-          
-          if (!isCenter && !isLeft && !isRight) return null
-          
-          return (
-            <div
-              key={getId(item)}
-              className={`carousel-item ${isCenter ? 'center' : ''} ${isLeft ? 'left' : ''} ${isRight ? 'right' : ''}`}
-              onClick={() => !isCenter && onSelect(getId(item))}
-            >
-              {renderItem(item, isCenter)}
-            </div>
-          )
-        })}
-      </div>
-      
-      <button 
-        className="carousel-nav carousel-next"
-        onClick={() => {
-          const newIndex = selectedIndex < items.length - 1 ? selectedIndex + 1 : 0
-          onSelect(getId(items[newIndex]))
-        }}
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
-    </div>
+    <button
+      className={`side-icon ${active ? 'active' : ''} ${comingSoon ? 'coming-soon' : ''}`}
+      onClick={comingSoon ? undefined : onClick}
+      title={tooltip}
+    >
+      {icon}
+      {comingSoon && <span className="soon-dot" />}
+    </button>
   )
 }
 
 function App() {
-  // Configuration state
   const [carColor, setCarColor] = useState<CarColor>('silver')
   const [bodyType, setBodyType] = useState<BodyType>('coupe')
   const [wheelType, setWheelType] = useState<WheelType>('wheel2')
   const [driveType, setDriveType] = useState<DriveType>('4WD')
-  const [treadType, setTreadType] = useState<TreadType>('sport')
-  const [headlightType, setHeadlightType] = useState<HeadlightType>('led')
-  const [brakeType, setBrakeType] = useState<BrakeType>('red')
-  const [trimType, setTrimType] = useState<TrimType>('carbon')
-  
-  // UI state
-  const [cartItems, setCartItems] = useState(0)
-  const [notification, setNotification] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Circular transition state
+  // Image transition
   const [displayedImage, setDisplayedImage] = useState(carImages[carColor][bodyType])
   const [incomingImage, setIncomingImage] = useState<string | null>(null)
   const [transitionKey, setTransitionKey] = useState(0)
-
   const targetImage = carImages[carColor][bodyType]
 
   useEffect(() => {
     if (targetImage !== displayedImage && !incomingImage) {
-      // Preload the new image before starting transition
       const img = new Image()
       img.src = targetImage
       img.onload = () => {
         setIncomingImage(targetImage)
         setTransitionKey(k => k + 1)
       }
-      // If already cached, onload fires synchronously or very fast
     }
   }, [targetImage, displayedImage, incomingImage])
 
@@ -201,316 +124,238 @@ function App() {
       return () => clearTimeout(timer)
     }
   }, [incomingImage])
-  
-  // Price calculation
+
+  // Pricing
   const basePrice = 276000
   const accessoryPrice = 4350
   const wheelPrice = wheelOptions.find(w => w.id === wheelType)?.price || 0
   const drivePrice = driveType === '4WD' ? 1800 : 0
   const bodyPrice = bodyType === 'convertible' ? 3500 : 0
-  const treadPrice = treadOptions.find(t => t.id === treadType)?.price || 0
-  const headlightPrice = headlightOptions.find(h => h.id === headlightType)?.price || 0
-  const brakePrice = brakeOptions.find(b => b.id === brakeType)?.price || 0
-  const trimPrice = trimOptions.find(t => t.id === trimType)?.price || 0
-  const totalPrice = basePrice + accessoryPrice + wheelPrice + drivePrice + bodyPrice + treadPrice + headlightPrice + brakePrice + trimPrice
+  const totalPrice = basePrice + accessoryPrice + wheelPrice + drivePrice + bodyPrice
 
-  const showNotification = (message: string) => {
-    setNotification(message)
-    setTimeout(() => setNotification(null), 3000)
+  // Wheel scroll
+  const wheelScrollRef = useRef<HTMLDivElement>(null)
+  const scrollWheels = (dir: 'left' | 'right') => {
+    if (wheelScrollRef.current) {
+      wheelScrollRef.current.scrollBy({ left: dir === 'left' ? -140 : 140, behavior: 'smooth' })
+    }
   }
 
-  const addToCart = () => {
-    setCartItems(prev => prev + 1)
-    showNotification('Added to cart!')
+  // Cycle color
+  const cycleColor = (dir: 'prev' | 'next') => {
+    const idx = colorOptions.findIndex(c => c.id === carColor)
+    if (dir === 'next') {
+      setCarColor(colorOptions[(idx + 1) % colorOptions.length].id)
+    } else {
+      setCarColor(colorOptions[(idx - 1 + colorOptions.length) % colorOptions.length].id)
+    }
   }
-
-  const resetConfig = () => {
-    setCarColor('silver')
-    setBodyType('coupe')
-    setWheelType('wheel2')
-    setDriveType('4WD')
-    setTreadType('sport')
-    setHeadlightType('led')
-    setBrakeType('red')
-    setTrimType('carbon')
-    showNotification('Reset to default')
-  }
-
-  const shareConfig = () => {
-    showNotification('Link copied!')
-  }
-
-  // Refs for scroll animations
-  const mainRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.hero-content', 
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.3 }
-      )
-    }, mainRef)
-    return () => ctx.revert()
-  }, [])
 
   return (
-    <div ref={mainRef} className="app">
-      {/* Notification */}
-      {notification && (
-        <div className="notification">
-          <span>{notification}</span>
-        </div>
-      )}
-
-      {/* Navigation */}
+    <div className="app">
+      {/* ===== NAVIGATION ===== */}
       <nav className="nav">
         <div className="nav-left">
-          <img src="/images/porsche-logo.png" alt="Porsche" className="porsche-logo" onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none'
-          }} />
-          <span className="logo-text">PORSCHE</span>
+          <PorscheCrest size={32} />
         </div>
-        
-        <div className="nav-links">
-          <a href="#">Models</a>
+
+        <div className={`nav-center ${mobileMenuOpen ? 'open' : ''}`}>
+          <a href="#" className="nav-pill active">Models</a>
           <a href="#">Services</a>
           <a href="#">Experience</a>
           <a href="#">Shop</a>
+          <a href="#">Purchase</a>
         </div>
-        
+
         <div className="nav-right">
-          <button className="nav-btn"><Search className="w-4 h-4" /></button>
-          <button className="nav-btn" onClick={shareConfig}><Share2 className="w-4 h-4" /></button>
-          <button className="nav-btn cart-btn" onClick={addToCart}>
-            <ShoppingCart className="w-4 h-4" />
-            {cartItems > 0 && <span className="cart-badge">{cartItems}</span>}
+          <button className="nav-icon-btn hide-mobile">
+            <LayoutGrid size={16} />
+          </button>
+          <button className="contact-btn hide-mobile">
+            <Phone size={14} />
+            <span>Contact Dealer</span>
+          </button>
+          <button className="nav-icon-btn hide-mobile">
+            <Settings size={16} />
+          </button>
+          {/* Mobile hamburger */}
+          <button className="hamburger show-mobile" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <span /><span /><span />
           </button>
         </div>
       </nav>
 
-      {/* Main Configurator */}
-      <main className="configurator">
-        {/* Left Controls */}
-        <div className="side-controls left">
-          <div className="control-group coming-soon-overlay">
-            <span className="control-label">Headlights</span>
-            <Carousel
-              items={headlightOptions}
-              selectedId={headlightType}
-              onSelect={(id) => setHeadlightType(id as HeadlightType)}
-              getId={(item) => item.id}
-              renderItem={(item, isCenter) => (
-                <div className="headlight-preview">
-                  <img src={headlightImages[item.id]} alt={item.name} />
-                  {isCenter && <span className="item-label">{item.name}</span>}
-                </div>
-              )}
-            />
-          </div>
-          
-          <div className="control-group coming-soon-overlay">
-            <span className="control-label">Brakes</span>
-            <Carousel
-              items={brakeOptions}
-              selectedId={brakeType}
-              onSelect={(id) => setBrakeType(id as BrakeType)}
-              getId={(item) => item.id}
-              renderItem={(item, isCenter) => (
-                <div className="brake-preview">
-                  <img src={brakeImages[item.id]} alt={item.name} />
-                  {isCenter && <span className="item-label">{item.name}</span>}
-                </div>
-              )}
-            />
-          </div>
-          
-          <div className="control-group small coming-soon-overlay">
-            <span className="control-label">Trim</span>
-            <div className="mini-selector">
-              {trimOptions.map(opt => (
-                <button
-                  key={opt.id}
-                  className={`mini-btn ${trimType === opt.id ? 'active' : ''}`}
-                  onClick={() => setTrimType(opt.id)}
-                >
-                  <img src={trimImages[opt.id]} alt={opt.name} />
-                </button>
-              ))}
+      {/* ===== MAIN ===== */}
+      <main className="main">
+        {/* Top info bar */}
+        <div className="info-bar">
+          <div className="info-left">
+            <div className="title-row">
+              <h1 className="car-title">Tagra-4</h1>
+              <button className="dropdown-trigger"><ChevronDown size={18} /></button>
             </div>
+            <p className="car-subtitle">911 Carera · Personal Edition</p>
           </div>
-          
-          <div className="control-group small coming-soon-overlay">
-            <span className="control-label">Exhaust</span>
-            <div className="mini-selector">
-              <button className="mini-btn active">
-                <img src="/images/exhaust-sport.png" alt="Sport" />
-              </button>
+          <div className="info-right">
+            <div className="price-block">
+              <span className="currency">$</span>
+              <span className="amount">{totalPrice.toLocaleString()}</span>
             </div>
+            <p className="accessories-label">+ ${accessoryPrice.toLocaleString()} accessories</p>
           </div>
         </div>
 
-        {/* Center - Car Display */}
-        <div className="car-display">
-          <div className="car-info">
-            <h1 className="car-name">Tagra-4</h1>
-            <p className="car-subtitle">911 Carrera — Personal Edition</p>
-            <div className="car-specs">
-              <span className="spec-badge" style={{ backgroundColor: colorOptions.find(c => c.id === carColor)?.hex }}></span>
-              <span>{colorOptions.find(c => c.id === carColor)?.name}</span>
-              <span className="divider">|</span>
-              <span>{bodyType === 'coupe' ? 'Coupe' : 'Convertible'}</span>
-            </div>
+        {/* Car viewport */}
+        <div className="car-viewport">
+          {/* Left side icons */}
+          <div className="side-icons side-left">
+            <SideIcon icon={<Lightbulb size={18} />} comingSoon tooltip="Headlights" />
+            <SideIcon icon={<Disc3 size={18} />} comingSoon tooltip="Brakes" />
+            <SideIcon icon={<Layers size={18} />} comingSoon tooltip="Trim" />
+            <SideIcon icon={<Wind size={18} />} comingSoon tooltip="Exhaust" />
           </div>
-          
-          <div className="car-image-container">
+
+          {/* Car image area */}
+          <div className="car-stage">
             <div className="car-image-wrapper">
-              <img
-                src={displayedImage}
-                alt="Porsche 911"
-                className="car-image"
-              />
+              <img src={displayedImage} alt="Porsche 911" className="car-image" />
               {incomingImage && (
                 <img
                   key={transitionKey}
                   src={incomingImage}
                   alt="Porsche 911"
-                  className="car-image-enter"
+                  className="car-image car-image-enter"
                 />
               )}
             </div>
-          </div>
-          
-          <div className="price-display">
-            <span className="price">${totalPrice.toLocaleString()}</span>
-            <span className="accessories">+ ${accessoryPrice.toLocaleString()} accessories</span>
-          </div>
-        </div>
 
-        {/* Right Controls */}
-        <div className="side-controls right">
-          <div className="control-group">
-            <span className="control-label">Roof</span>
-            <button 
-              className={`toggle-btn ${bodyType === 'convertible' ? 'active' : ''}`}
-              onClick={() => setBodyType(bodyType === 'coupe' ? 'convertible' : 'coupe')}
-            >
-              <Sun className="w-5 h-5" />
-              <span>{bodyType === 'convertible' ? 'Open' : 'Closed'}</span>
-            </button>
-          </div>
-          
-          <div className="control-group small coming-soon-overlay">
-            <span className="control-label">Spoiler</span>
-            <div className="mini-selector">
-              <button className="mini-btn active">
-                <img src="/images/spoiler-active.png" alt="Active" />
-              </button>
+            {/* Color dots under car */}
+            <div className="color-selector">
+              {colorOptions.map(c => (
+                <button
+                  key={c.id}
+                  className={`color-dot ${carColor === c.id ? 'active' : ''}`}
+                  style={{ background: c.hex }}
+                  onClick={() => setCarColor(c.id)}
+                  title={c.name}
+                />
+              ))}
             </div>
-          </div>
-          
-          <div className="control-group small coming-soon-overlay">
-            <span className="control-label">Mirrors</span>
-            <div className="mini-selector">
-              <button className="mini-btn active">
-                <img src="/images/mirror-carbon.png" alt="Carbon" />
-              </button>
-            </div>
-          </div>
-          
-          <div className="control-group">
-            <span className="control-label">Actions</span>
-            <div className="action-buttons">
-              <button className="action-btn" onClick={resetConfig}>
-                <RotateCcw className="w-4 h-4" />
-              </button>
-              <button className="action-btn primary" onClick={addToCart}>
-                <ShoppingCart className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
 
-        {/* Bottom Cards - Carousel Style */}
-        <div className="bottom-cards">
-          {/* Wheels Card */}
-          <div className="config-card">
-            <div className="card-header">
-              <span className="card-title">Wheels</span>
-              <span className="card-price">+${wheelPrice.toLocaleString()}</span>
+            {/* Nav arrows */}
+            <div className="car-arrows">
+              <button className="arrow-btn" onClick={() => cycleColor('prev')}>
+                <ChevronLeft size={18} />
+              </button>
+              <button className="arrow-btn" onClick={() => cycleColor('next')}>
+                <ChevronRight size={18} />
+              </button>
             </div>
-            <Carousel
-              items={wheelOptions}
-              selectedId={wheelType}
-              onSelect={(id) => setWheelType(id as WheelType)}
-              getId={(item) => item.id}
-              renderItem={(item, isCenter) => (
-                <div className="wheel-preview">
-                  <img src={wheelImages[item.id]} alt={item.name} />
-                  {isCenter && <span className="item-label">{item.name}</span>}
-                </div>
-              )}
+          </div>
+
+          {/* Right side icons */}
+          <div className="side-icons side-right">
+            <SideIcon
+              icon={<Car size={18} />}
+              active={bodyType === 'coupe'}
+              onClick={() => setBodyType('coupe')}
+              tooltip="Coupe"
             />
+            <SideIcon
+              icon={<Sun size={18} />}
+              active={bodyType === 'convertible'}
+              onClick={() => setBodyType('convertible')}
+              tooltip="Convertible"
+            />
+            <SideIcon icon={<RectangleHorizontal size={18} />} comingSoon tooltip="Spoiler" />
+            <SideIcon icon={<FlipHorizontal2 size={18} />} comingSoon tooltip="Mirrors" />
+          </div>
+        </div>
+
+        {/* ===== BOTTOM CARDS ===== */}
+        <div className="bottom-cards">
+          {/* Car Body Card */}
+          <div className="config-card">
+            <div className="card-head">
+              <span className="card-label">Car Body</span>
+              <div className="card-meta">
+                <span className="card-price">+${bodyPrice.toLocaleString()}</span>
+                <Settings size={14} className="card-gear" />
+              </div>
+            </div>
+            <div className="body-options">
+              <button
+                className={`body-option ${bodyType === 'coupe' ? 'selected' : ''}`}
+                onClick={() => setBodyType('coupe')}
+              >
+                <img src={carImages[carColor].coupe} alt="Coupe" />
+                <span>Coupe Type</span>
+              </button>
+              <button
+                className={`body-option ${bodyType === 'convertible' ? 'selected' : ''}`}
+                onClick={() => setBodyType('convertible')}
+              >
+                <img src={carImages[carColor].convertible} alt="Convertible" />
+                <span>Targa Type</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Wheels Card */}
+          <div className="config-card wheels-card">
+            <div className="card-head">
+              <span className="card-label">Wheels Type</span>
+              <div className="card-meta">
+                <span className="card-price">+${wheelPrice.toLocaleString()}</span>
+                <Settings size={14} className="card-gear" />
+              </div>
+            </div>
+            <div className="wheels-scroll-area">
+              <div className="wheels-track" ref={wheelScrollRef}>
+                {wheelOptions.map(w => (
+                  <button
+                    key={w.id}
+                    className={`wheel-option ${wheelType === w.id ? 'selected' : ''}`}
+                    onClick={() => setWheelType(w.id)}
+                  >
+                    {wheelType === w.id && (
+                      <span className="wheel-check"><Check size={12} /></span>
+                    )}
+                    <img src={wheelImages[w.id]} alt={w.name} />
+                    <span className="wheel-name">Zoll {w.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Drive Type Card */}
-          <div className="config-card drive-card">
-            <div className="card-header">
-              <span className="card-title">Drive System</span>
-              <span className="card-price">+${drivePrice.toLocaleString()}</span>
-            </div>
-            <div className="drive-selector">
-              <button 
-                className={`drive-option ${driveType === '2WD' ? 'active' : ''}`}
-                onClick={() => setDriveType('2WD')}
-              >
-                <img src={transmissionImages['2WD']} alt="2WD" />
-                <span className="drive-label">2WD</span>
-              </button>
-              <button 
-                className={`drive-option ${driveType === '4WD' ? 'active' : ''}`}
-                onClick={() => setDriveType('4WD')}
-              >
-                <img src={transmissionImages['4WD']} alt="4WD" />
-                <span className="drive-label">4WD</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Treads Card */}
           <div className="config-card">
-            <div className="card-header">
-              <span className="card-title">Tire Tread</span>
-              <span className="card-price">+${treadPrice.toLocaleString()}</span>
+            <div className="card-head">
+              <span className="card-label">Drive Type</span>
+              <div className="card-meta">
+                <span className="card-price">+${drivePrice.toLocaleString()}</span>
+                <Settings size={14} className="card-gear" />
+              </div>
             </div>
-            <Carousel
-              items={treadOptions}
-              selectedId={treadType}
-              onSelect={(id) => setTreadType(id as TreadType)}
-              getId={(item) => item.id}
-              renderItem={(item, isCenter) => (
-                <div className="tread-preview">
-                  <img src={treadImages[item.id]} alt={item.name} />
-                  {isCenter && <span className="item-label">{item.name}</span>}
-                </div>
-              )}
-            />
-          </div>
-
-          {/* Color Card */}
-          <div className="config-card color-card">
-            <div className="card-header">
-              <span className="card-title">Paint</span>
-            </div>
-            <div className="color-grid">
-              {colorOptions.map(color => (
-                <button
-                  key={color.id}
-                  className={`color-btn ${carColor === color.id ? 'active' : ''}`}
-                  onClick={() => setCarColor(color.id)}
-                  style={{ backgroundColor: color.hex }}
-                  title={color.name}
+            <div className="drive-options">
+              <div className="drive-visual">
+                <img
+                  src={transmissionImages[driveType]}
+                  alt={driveType}
+                  className="drive-img"
                 />
-              ))}
+              </div>
+              <div className="drive-toggle">
+                <button
+                  className={`drive-btn ${driveType === '2WD' ? 'active' : ''}`}
+                  onClick={() => setDriveType('2WD')}
+                >2WD</button>
+                <button
+                  className={`drive-btn ${driveType === '4WD' ? 'active' : ''}`}
+                  onClick={() => setDriveType('4WD')}
+                >4WD</button>
+              </div>
             </div>
           </div>
         </div>
