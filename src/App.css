@@ -89,7 +89,7 @@ body {
   background: rgba(0,0,0,0.04);
 }
 
-.nav-center a.nav-pill.active {
+.nav-center a.active {
   background: var(--pill-bg);
   color: var(--white);
 }
@@ -626,4 +626,660 @@ body {
   .car-title { font-size: 28px; }
   .amount { font-size: 28px; }
   .main { padding: 8px 12px 20px; }
+}
+
+/* ============================
+   BACK TO MODELS BUTTON
+   ============================ */
+.back-to-models {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 4px;
+  transition: color 0.2s;
+}
+
+.back-to-models:hover { color: var(--text); }
+
+/* ============================
+   MODELS GRID
+   ============================ */
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.model-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: cardIn 0.5s ease both;
+  transition: transform 0.2s;
+}
+
+.model-card:hover { transform: translateY(-4px); }
+
+.model-configurable {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.model-configurable:hover {
+  border-color: var(--accent);
+}
+
+.model-image-area {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.model-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.model-emoji {
+  font-size: 48px;
+}
+
+.model-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.model-name {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.model-tagline {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.model-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.model-price {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.model-configure-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.model-configure-btn:hover { background: #444; }
+
+.model-soon {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 960px) {
+  .models-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .models-grid { grid-template-columns: 1fr; }
+  .model-image-area { height: 100px; }
+}
+
+/* ============================
+   SCROLLABLE PAGES
+   ============================ */
+.main-scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ============================
+   SHARED PAGE STYLES
+   ============================ */
+.page-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 0 40px;
+  animation: pageIn 0.4s ease both;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-hero {
+  margin-bottom: 36px;
+}
+
+.page-title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.page-desc {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+/* ============================
+   SERVICES PAGE
+   ============================ */
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.service-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: cardIn 0.5s ease both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.service-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.service-tag {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  background: var(--white);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.service-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.service-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.service-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+  margin-top: auto;
+  transition: gap 0.2s;
+}
+
+.service-link:hover { gap: 10px; }
+
+.service-banner {
+  background: var(--pill-bg);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.banner-text h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.banner-text p {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.banner-btn {
+  background: var(--white);
+  color: var(--text);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s;
+}
+
+.banner-btn:hover { transform: scale(1.03); }
+
+/* ============================
+   EXPERIENCE PAGE
+   ============================ */
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.experience-row {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: cardIn 0.5s ease both;
+  transition: transform 0.2s;
+}
+
+.experience-row:hover { transform: translateX(4px); }
+
+.experience-emoji {
+  font-size: 36px;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: var(--white);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.experience-info {
+  flex: 1;
+}
+
+.experience-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.experience-head h3 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.experience-info p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.experience-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.experience-btn:hover {
+  background: var(--text);
+  color: var(--white);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-item {
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ============================
+   SHOP PAGE
+   ============================ */
+.shop-categories {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.shop-cat {
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  background: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s;
+}
+
+.shop-cat:hover { background: var(--card-bg); }
+
+.shop-cat.active {
+  background: var(--pill-bg);
+  color: var(--white);
+  border-color: var(--pill-bg);
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.shop-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: cardIn 0.5s ease both;
+  transition: transform 0.2s;
+}
+
+.shop-card:hover { transform: translateY(-4px); }
+
+.shop-card-image {
+  width: 100%;
+  height: 120px;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.shop-category {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.shop-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.shop-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.shop-price {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.shop-add {
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.shop-add:hover { background: #444; }
+
+/* ============================
+   PURCHASE PAGE
+   ============================ */
+.purchase-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.purchase-step {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: cardIn 0.5s ease both;
+}
+
+.step-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: rgba(0,0,0,0.06);
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.purchase-cta {
+  margin-top: 8px;
+}
+
+.cta-card {
+  background: var(--pill-bg);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 36px;
+  text-align: center;
+}
+
+.cta-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cta-card p {
+  font-size: 15px;
+  opacity: 0.7;
+  max-width: 440px;
+  margin: 0 auto 24px;
+  line-height: 1.5;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 100px;
+  border: none;
+  background: var(--white);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.cta-primary:hover { transform: scale(1.03); }
+
+.cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 28px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  background: transparent;
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cta-secondary:hover {
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.05);
+}
+
+/* ============================
+   PAGE RESPONSIVE — TABLET
+   ============================ */
+@media (max-width: 960px) {
+  .page-title { font-size: 32px; }
+  .service-grid { grid-template-columns: 1fr; }
+  .shop-grid { grid-template-columns: repeat(2, 1fr); }
+  .purchase-steps { grid-template-columns: repeat(2, 1fr); }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .service-banner { flex-direction: column; text-align: center; }
+}
+
+/* ============================
+   PAGE RESPONSIVE — MOBILE
+   ============================ */
+@media (max-width: 768px) {
+  .page-content { padding: 16px 0 32px; }
+  .page-title { font-size: 28px; }
+  .page-desc { font-size: 14px; }
+  .shop-grid { grid-template-columns: 1fr; }
+  .purchase-steps { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .experience-row { flex-direction: column; text-align: center; }
+  .experience-emoji { width: 50px; height: 50px; font-size: 28px; }
+  .experience-head { justify-content: center; }
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cta-card { padding: 28px 20px; }
 }
