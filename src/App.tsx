@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
-  ChevronLeft, ChevronRight, Check,
+  ChevronLeft, ChevronRight,
   Sun, Car, Lightbulb, Disc3, Layers, Wind,
   RectangleHorizontal, FlipHorizontal2, Phone,
   LayoutGrid, Settings
@@ -47,7 +47,7 @@ const bodyOptions: { id: BodyType; name: string }[] = [
   { id: 'convertible', name: 'Targa Type' }
 ]
 
-// Generic 3-item carousel: center = full, sides = dimmed
+// Carousel — renders ALL items always, positions them with transforms
 function OptionCarousel<T>({
   items,
   selectedId,
@@ -62,40 +62,53 @@ function OptionCarousel<T>({
   renderItem: (item: T, state: 'center' | 'side') => React.ReactNode
 }) {
   const idx = items.findIndex(item => getId(item) === selectedId)
+  const len = items.length
 
   const prev = () => {
-    const newIdx = idx > 0 ? idx - 1 : items.length - 1
+    const newIdx = idx > 0 ? idx - 1 : len - 1
     onSelect(getId(items[newIdx]))
   }
   const next = () => {
-    const newIdx = idx < items.length - 1 ? idx + 1 : 0
+    const newIdx = idx < len - 1 ? idx + 1 : 0
     onSelect(getId(items[newIdx]))
+  }
+
+  // Calculate position for each item relative to center
+  const getPosition = (i: number): number => {
+    let diff = i - idx
+    // Wrap around
+    if (diff > len / 2) diff -= len
+    if (diff < -len / 2) diff += len
+    return diff
   }
 
   return (
     <div className="opt-carousel">
-      <button className="opt-arrow" onClick={prev}><ChevronLeft size={16} /></button>
+      <button className="opt-arrow" onClick={prev}><ChevronLeft size={18} /></button>
       <div className="opt-track">
         {items.map((item, i) => {
-          const isCenter = i === idx
-          const isLeft = i === (idx - 1 + items.length) % items.length
-          const isRight = i === (idx + 1) % items.length
-
-          if (!isCenter && !isLeft && !isRight) return null
+          const pos = getPosition(i)
+          const isCenter = pos === 0
+          const isVisible = Math.abs(pos) <= 1
 
           return (
             <div
               key={getId(item)}
-              className={`opt-item ${isCenter ? 'center' : 'side'} ${isLeft ? 'left' : ''} ${isRight ? 'right' : ''}`}
+              className="opt-item"
+              style={{
+                transform: `translateX(${pos * 100}%) scale(${isCenter ? 1 : 0.65})`,
+                opacity: isCenter ? 1 : isVisible ? 0.35 : 0,
+                zIndex: isCenter ? 3 : isVisible ? 2 : 1,
+                pointerEvents: isCenter ? 'none' : isVisible ? 'auto' : 'none',
+              }}
               onClick={() => !isCenter && onSelect(getId(item))}
             >
-              {isCenter && <span className="opt-check"><Check size={10} /></span>}
               {renderItem(item, isCenter ? 'center' : 'side')}
             </div>
           )
         })}
       </div>
-      <button className="opt-arrow" onClick={next}><ChevronRight size={16} /></button>
+      <button className="opt-arrow" onClick={next}><ChevronRight size={18} /></button>
     </div>
   )
 }
@@ -179,21 +192,20 @@ function App() {
         </div>
 
         <div className="nav-right">
-          <button className="nav-icon-btn hide-mobile"><LayoutGrid size={16} /></button>
+          <button className="nav-icon-btn hide-mobile"><LayoutGrid size={18} /></button>
           <button className="contact-btn hide-mobile">
-            <Phone size={14} />
+            <Phone size={16} />
             <span>Contact Dealer</span>
           </button>
-          <button className="nav-icon-btn hide-mobile"><Settings size={16} /></button>
+          <button className="nav-icon-btn hide-mobile"><Settings size={18} /></button>
           <button className="hamburger show-mobile" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <span /><span /><span />
           </button>
         </div>
       </nav>
 
-      {/* ===== MAIN — NO SCROLL ===== */}
+      {/* ===== MAIN ===== */}
       <main className="main">
-        {/* Top info bar */}
         <div className="info-bar">
           <div className="info-left">
             <h1 className="car-title">Tagra-4</h1>
@@ -208,17 +220,14 @@ function App() {
           </div>
         </div>
 
-        {/* Car viewport */}
         <div className="car-viewport">
-          {/* Left side icons */}
           <div className="side-icons side-left">
-            <SideIcon icon={<Lightbulb size={18} />} comingSoon tooltip="Headlights" />
-            <SideIcon icon={<Disc3 size={18} />} comingSoon tooltip="Brakes" />
-            <SideIcon icon={<Layers size={18} />} comingSoon tooltip="Trim" />
-            <SideIcon icon={<Wind size={18} />} comingSoon tooltip="Exhaust" />
+            <SideIcon icon={<Lightbulb size={20} />} comingSoon tooltip="Headlights" />
+            <SideIcon icon={<Disc3 size={20} />} comingSoon tooltip="Brakes" />
+            <SideIcon icon={<Layers size={20} />} comingSoon tooltip="Trim" />
+            <SideIcon icon={<Wind size={20} />} comingSoon tooltip="Exhaust" />
           </div>
 
-          {/* Car image */}
           <div className="car-stage">
             <div className="car-image-wrapper">
               <img src={displayedImage} alt="Porsche 911" className="car-image" />
@@ -233,16 +242,15 @@ function App() {
             </div>
           </div>
 
-          {/* Right side icons */}
           <div className="side-icons side-right">
-            <SideIcon icon={<Car size={18} />} active={bodyType === 'coupe'} onClick={() => setBodyType('coupe')} tooltip="Coupe" />
-            <SideIcon icon={<Sun size={18} />} active={bodyType === 'convertible'} onClick={() => setBodyType('convertible')} tooltip="Convertible" />
-            <SideIcon icon={<RectangleHorizontal size={18} />} comingSoon tooltip="Spoiler" />
-            <SideIcon icon={<FlipHorizontal2 size={18} />} comingSoon tooltip="Mirrors" />
+            <SideIcon icon={<Car size={20} />} active={bodyType === 'coupe'} onClick={() => setBodyType('coupe')} tooltip="Coupe" />
+            <SideIcon icon={<Sun size={20} />} active={bodyType === 'convertible'} onClick={() => setBodyType('convertible')} tooltip="Convertible" />
+            <SideIcon icon={<RectangleHorizontal size={20} />} comingSoon tooltip="Spoiler" />
+            <SideIcon icon={<FlipHorizontal2 size={20} />} comingSoon tooltip="Mirrors" />
           </div>
         </div>
 
-        {/* ===== BOTTOM CARDS — CAROUSEL STYLE ===== */}
+        {/* ===== BOTTOM CARDS ===== */}
         <div className="bottom-cards">
           {/* Car Body */}
           <div className="config-card">
@@ -284,7 +292,7 @@ function App() {
             />
           </div>
 
-          {/* Paint Color */}
+          {/* Paint Color — uses car images instead of swatches */}
           <div className="config-card">
             <div className="card-head">
               <span className="card-label">Paint Color</span>
@@ -295,8 +303,8 @@ function App() {
               getId={item => item.id}
               onSelect={id => setCarColor(id as CarColor)}
               renderItem={(item, state) => (
-                <div className="color-thumb">
-                  <div className="color-swatch" style={{ background: item.hex }} />
+                <div className="paint-thumb">
+                  <img src={carImages[item.id][bodyType]} alt={item.name} />
                   {state === 'center' && <span className="opt-name">{item.name}</span>}
                 </div>
               )}

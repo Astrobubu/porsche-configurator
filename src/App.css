@@ -336,6 +336,7 @@ body {
   background: var(--card-bg);
   border-radius: var(--radius);
   padding: 18px 16px;
+  overflow: hidden;
 }
 
 .card-head {
@@ -365,9 +366,9 @@ body {
 .opt-carousel {
   display: flex;
   align-items: center;
-  height: 100px;
+  height: 110px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .opt-arrow {
@@ -411,43 +412,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-}
-
-.opt-item.center {
-  z-index: 3;
-  transform: translateX(0) scale(1);
-  opacity: 1;
-}
-
-.opt-item.side.left {
-  z-index: 2;
-  transform: translateX(-90%) scale(0.6);
-  opacity: 0.3;
-}
-
-.opt-item.side.right {
-  z-index: 2;
-  transform: translateX(90%) scale(0.6);
-  opacity: 0.3;
-}
-
-.opt-check {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--pill-bg);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
-}
-
-.opt-check svg {
-  width: 12px;
-  height: 12px;
 }
 
 .opt-name {
@@ -485,21 +451,17 @@ body {
   object-fit: contain;
 }
 
-/* Color thumbnails */
-.color-thumb {
+/* Paint color thumbnails (car images) */
+.paint-thumb {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
 }
 
-.color-swatch {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.08);
-  border: 3px solid var(--white);
-  flex-shrink: 0;
+.paint-thumb img {
+  width: 130px;
+  height: 56px;
+  object-fit: contain;
 }
 
 /* ============================
@@ -519,8 +481,8 @@ body {
 
   .body-thumb img { width: 100px; height: 46px; }
   .wheel-thumb img { width: 56px; height: 56px; }
-  .color-swatch { width: 42px; height: 42px; }
-  .opt-carousel { height: 90px; }
+  .paint-thumb img { width: 100px; height: 46px; }
+  .opt-carousel { height: 95px; }
   .side-icon { width: 42px; height: 42px; }
 }
 
@@ -613,7 +575,7 @@ body {
   .opt-carousel { height: 100px; }
   .body-thumb img { width: 120px; height: 52px; }
   .wheel-thumb img { width: 62px; height: 62px; }
-  .color-swatch { width: 48px; height: 48px; }
+  .paint-thumb img { width: 120px; height: 52px; }
 
   .card-label { font-size: 16px; }
   .opt-name { font-size: 13px; }
