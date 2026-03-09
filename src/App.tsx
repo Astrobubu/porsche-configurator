@@ -15,17 +15,17 @@ type DriveType = '2WD' | '4WD'
 
 // Data
 const carImages: Record<CarColor, Record<BodyType, string>> = {
-  silver: { coupe: '/images/car-silver-coupe-wheel2.png', convertible: '/images/car-silver-convertible-wheel2.png' },
-  black: { coupe: '/images/car-black-coupe-wheel2.png', convertible: '/images/car-black-convertible-wheel2.png' },
-  red: { coupe: '/images/car-red-coupe-wheel2.png', convertible: '/images/car-red-convertible-wheel2.png' },
-  blue: { coupe: '/images/car-blue-coupe-wheel2.png', convertible: '/images/car-blue-convertible-wheel2.png' },
-  white: { coupe: '/images/car-white-coupe-wheel2.png', convertible: '/images/car-white-convertible-wheel2.png' }
+  silver: { coupe: '/images/car-silver-coupe-wheel2.webp', convertible: '/images/car-silver-convertible-wheel2.webp' },
+  black: { coupe: '/images/car-black-coupe-wheel2.webp', convertible: '/images/car-black-convertible-wheel2.webp' },
+  red: { coupe: '/images/car-red-coupe-wheel2.webp', convertible: '/images/car-red-convertible-wheel2.webp' },
+  blue: { coupe: '/images/car-blue-coupe-wheel2.webp', convertible: '/images/car-blue-convertible-wheel2.webp' },
+  white: { coupe: '/images/car-white-coupe-wheel2.webp', convertible: '/images/car-white-convertible-wheel2.webp' }
 }
 
 const wheelImages: Record<WheelType, string> = {
-  wheel1: '/images/wheel-1.png',
-  wheel2: '/images/wheel-2.png',
-  wheel3: '/images/wheel-3.png'
+  wheel1: '/images/wheel-1.webp',
+  wheel2: '/images/wheel-2.webp',
+  wheel3: '/images/wheel-3.webp'
 }
 
 const colorOptions: { id: CarColor; name: string; hex: string }[] = [
@@ -180,7 +180,7 @@ function App() {
       {/* ===== NAVIGATION ===== */}
       <nav className="nav">
         <div className="nav-left">
-          <img src="/images/porsche-logo.png" alt="Porsche" className="porsche-logo" />
+          <img src="/images/porsche-logo.webp" alt="Porsche" className="porsche-logo" />
         </div>
 
         <div className={`nav-center ${mobileMenuOpen ? 'open' : ''}`}>
