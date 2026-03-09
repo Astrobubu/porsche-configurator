@@ -137,7 +137,7 @@ function App() {
   const [carColor, setCarColor] = useState<CarColor>('silver')
   const [bodyType, setBodyType] = useState<BodyType>('coupe')
   const [wheelType, setWheelType] = useState<WheelType>('wheel2')
-  const [driveType, setDriveType] = useState<DriveType>('4WD')
+  const [driveType] = useState<DriveType>('4WD')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Image transition
